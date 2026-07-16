@@ -24,4 +24,4 @@ jobs:
         run: go vet ./...
 
       - name: Build
-        run: go build -o corslens ./cmd/corslens/
+        run: go build -o corslens-bin ./cmd/corslens/
