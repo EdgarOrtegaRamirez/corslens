@@ -2,6 +2,7 @@
 *.exe
 corslens
 corslens.exe
+!cmd/corslens/
 
 # Test binaries
 *.test
