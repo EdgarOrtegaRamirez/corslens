@@ -21,9 +21,9 @@ const (
 
 // Issue represents a CORS security issue found during analysis.
 type Issue struct {
-	Severity  Severity
-	Code      string
-	Message   string
+	Severity   Severity
+	Code       string
+	Message    string
 	Suggestion string
 }
 
@@ -32,7 +32,7 @@ type Result struct {
 	URL        string
 	StatusCode int
 	Issues     []Issue
-	Score      int // 0-100, 100 is perfectly secure
+	Score      int    // 0-100, 100 is perfectly secure
 	Grade      string // A-F
 	Config     *cors.CORSConfig
 }
@@ -56,9 +56,9 @@ func AuditCORS(url string, cfg *cors.CORSConfig) *Result {
 		result.Score = 0
 		result.Grade = "F"
 		result.Issues = append(result.Issues, Issue{
-			Severity: SeverityCritical,
-			Code:     "NO_RESPONSE",
-			Message:  "No CORS headers found — server may not support CORS",
+			Severity:   SeverityCritical,
+			Code:       "NO_RESPONSE",
+			Message:    "No CORS headers found — server may not support CORS",
 			Suggestion: "Ensure the server is configured to handle OPTIONS preflight requests",
 		})
 		return result
@@ -67,9 +67,9 @@ func AuditCORS(url string, cfg *cors.CORSConfig) *Result {
 	// Check 1: Wildcard origin with credentials
 	if cfg.Origin.IsWildcard && cfg.Origin.AllowsCredentials {
 		result.Issues = append(result.Issues, Issue{
-			Severity:  SeverityCritical,
-			Code:      "WILDCARD_WITH_CREDENTIALS",
-			Message:   "Wildcard origin (*) with credentials enabled is always rejected by browsers",
+			Severity:   SeverityCritical,
+			Code:       "WILDCARD_WITH_CREDENTIALS",
+			Message:    "Wildcard origin (*) with credentials enabled is always rejected by browsers",
 			Suggestion: "Use specific origins instead of * when credentials are required",
 		})
 	}
@@ -77,9 +77,9 @@ func AuditCORS(url string, cfg *cors.CORSConfig) *Result {
 	// Check 2: Wildcard origin
 	if cfg.Origin.IsWildcard {
 		result.Issues = append(result.Issues, Issue{
-			Severity:  SeverityMedium,
-			Code:      "WILDCARD_ORIGIN",
-			Message:   "Wildcard origin (*) allows any domain to make cross-origin requests",
+			Severity:   SeverityMedium,
+			Code:       "WILDCARD_ORIGIN",
+			Message:    "Wildcard origin (*) allows any domain to make cross-origin requests",
 			Suggestion: "Specify explicit allowed origins for better security",
 		})
 	}
@@ -98,9 +98,9 @@ func AuditCORS(url string, cfg *cors.CORSConfig) *Result {
 
 	if allowAllMethods && hasUnsafeMethods {
 		result.Issues = append(result.Issues, Issue{
-			Severity:  SeverityHigh,
-			Code:      "OVERLY_PERMISSIVE_METHODS",
-			Message:   "Many HTTP methods allowed including unsafe ones (PUT, DELETE, PATCH)",
+			Severity:   SeverityHigh,
+			Code:       "OVERLY_PERMISSIVE_METHODS",
+			Message:    "Many HTTP methods allowed including unsafe ones (PUT, DELETE, PATCH)",
 			Suggestion: "Restrict allowed methods to only what's needed (typically GET, POST)",
 		})
 	}
@@ -109,9 +109,9 @@ func AuditCORS(url string, cfg *cors.CORSConfig) *Result {
 	for _, h := range cfg.Header.AllowedHeaders {
 		if strings.EqualFold(h, "*") {
 			result.Issues = append(result.Issues, Issue{
-				Severity:  SeverityHigh,
-				Code:      "WILDCARD_HEADERS",
-				Message:   "Wildcard (*) allowed headers — any custom header can be sent",
+				Severity:   SeverityHigh,
+				Code:       "WILDCARD_HEADERS",
+				Message:    "Wildcard (*) allowed headers — any custom header can be sent",
 				Suggestion: "Specify explicit allowed headers for better security",
 			})
 			break
@@ -121,16 +121,16 @@ func AuditCORS(url string, cfg *cors.CORSConfig) *Result {
 	// Check 5: No max-age or very short max-age
 	if cfg.MaxAge.Duration == 0 {
 		result.Issues = append(result.Issues, Issue{
-			Severity:  SeverityLow,
-			Code:      "NO_MAX_AGE",
-			Message:   "No Access-Control-Max-Age header — browser must send preflight every time",
+			Severity:   SeverityLow,
+			Code:       "NO_MAX_AGE",
+			Message:    "No Access-Control-Max-Age header — browser must send preflight every time",
 			Suggestion: "Add Access-Control-Max-Age: 86400 to cache preflight responses for 24 hours",
 		})
 	} else if cfg.MaxAge.Duration < 600 {
 		result.Issues = append(result.Issues, Issue{
-			Severity:  SeverityLow,
-			Code:      "SHORT_MAX_AGE",
-			Message:   "Very short max-age (less than 10 minutes) causes excessive preflight requests",
+			Severity:   SeverityLow,
+			Code:       "SHORT_MAX_AGE",
+			Message:    "Very short max-age (less than 10 minutes) causes excessive preflight requests",
 			Suggestion: "Increase max-age to at least 3600 (1 hour) for better performance",
 		})
 	}
@@ -138,9 +138,9 @@ func AuditCORS(url string, cfg *cors.CORSConfig) *Result {
 	// Check 6: No exposed headers
 	if len(cfg.Header.ExposedHeaders) == 0 {
 		result.Issues = append(result.Issues, Issue{
-			Severity:  SeverityInfo,
-			Code:      "NO_EXPOSED_HEADERS",
-			Message:   "No Access-Control-Expose-Headers — client can only access safe headers",
+			Severity:   SeverityInfo,
+			Code:       "NO_EXPOSED_HEADERS",
+			Message:    "No Access-Control-Expose-Headers — client can only access safe headers",
 			Suggestion: "Add specific headers you want the client to read with Access-Control-Expose-Headers",
 		})
 	}
@@ -148,9 +148,9 @@ func AuditCORS(url string, cfg *cors.CORSConfig) *Result {
 	// Check 7: Specific origin with wildcard methods
 	if !cfg.Origin.IsWildcard && allowAllMethods {
 		result.Issues = append(result.Issues, Issue{
-			Severity:  SeverityMedium,
-			Code:      "SPECIFIC_ORIGIN_PERMISSIVE_METHODS",
-			Message:   "Specific origin but all methods allowed",
+			Severity:   SeverityMedium,
+			Code:       "SPECIFIC_ORIGIN_PERMISSIVE_METHODS",
+			Message:    "Specific origin but all methods allowed",
 			Suggestion: "Restrict methods to only what's needed",
 		})
 	}

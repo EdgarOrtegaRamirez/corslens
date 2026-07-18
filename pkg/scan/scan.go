@@ -16,8 +16,8 @@ import (
 
 // ScanningConfig holds options for the scanner.
 type ScanningConfig struct {
-	Timeout        time.Duration
-	MaxRedirects   int
+	Timeout      time.Duration
+	MaxRedirects int
 }
 
 // DefaultConfig returns a scanning config with sensible defaults.
@@ -64,9 +64,9 @@ func ScanURLs(cfg *ScanningConfig, urls []string) []*audit.Result {
 		result, err := ScanURL(cfg, url)
 		if err != nil {
 			results = append(results, &audit.Result{
-				URL:    url,
-				Score:  0,
-				Grade:  "E",
+				URL:   url,
+				Score: 0,
+				Grade: "E",
 				Issues: []audit.Issue{
 					{Severity: audit.SeverityCritical, Code: "SCAN_ERROR", Message: fmt.Sprintf("Scan failed: %v", err)},
 				},

@@ -8,9 +8,9 @@ import (
 
 // OriginPolicy represents the allowed origins configuration.
 type OriginPolicy struct {
-	AllowedOrigins   []string // Parsed from Access-Control-Allow-Origin
-	IsWildcard       bool     // True if origin is "*"
-	AllowsCredentials bool    // True if Access-Control-Allow-Credentials is "true"
+	AllowedOrigins    []string // Parsed from Access-Control-Allow-Origin
+	IsWildcard        bool     // True if origin is "*"
+	AllowsCredentials bool     // True if Access-Control-Allow-Credentials is "true"
 }
 
 // MethodPolicy represents allowed HTTP methods.
@@ -20,8 +20,8 @@ type MethodPolicy struct {
 
 // HeaderPolicy represents allowed request/response headers.
 type HeaderPolicy struct {
-	AllowedHeaders   []string // From Access-Control-Allow-Headers
-	ExposedHeaders   []string // From Access-Control-Expose-Headers
+	AllowedHeaders []string // From Access-Control-Allow-Headers
+	ExposedHeaders []string // From Access-Control-Expose-Headers
 }
 
 // MaxAgePolicy represents the cache duration for preflight responses.
@@ -31,12 +31,12 @@ type MaxAgePolicy struct {
 
 // CORSConfig is the complete parsed CORS configuration from response headers.
 type CORSConfig struct {
-	Origin      OriginPolicy
-	Method      MethodPolicy
-	Header      HeaderPolicy
-	MaxAge      MaxAgePolicy
-	RawHeaders  http.Header
-	StatusCode  int
+	Origin     OriginPolicy
+	Method     MethodPolicy
+	Header     HeaderPolicy
+	MaxAge     MaxAgePolicy
+	RawHeaders http.Header
+	StatusCode int
 }
 
 // ParseCORSHeaders extracts and parses CORS headers from an HTTP response.

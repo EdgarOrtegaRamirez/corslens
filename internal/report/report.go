@@ -68,10 +68,10 @@ func formatJSON(results []*audit.Result) string {
 	}
 
 	type JSONResult struct {
-		URL        string     `json:"url"`
-		StatusCode int        `json:"status_code"`
-		Score      int        `json:"score"`
-		Grade      string     `json:"grade"`
+		URL        string      `json:"url"`
+		StatusCode int         `json:"status_code"`
+		Score      int         `json:"score"`
+		Grade      string      `json:"grade"`
 		Issues     []JSONIssue `json:"issues"`
 	}
 

@@ -68,11 +68,11 @@ func TestAuditNoCORSHeaders(t *testing.T) {
 
 func TestAuditGoodConfig(t *testing.T) {
 	cfg := cors.ParseCORSHeadersFromMap(map[string]string{
-		"Access-Control-Allow-Origin":      "https://example.com",
-		"Access-Control-Allow-Methods":     "GET, POST",
-		"Access-Control-Allow-Headers":     "Content-Type, Authorization",
-		"Access-Control-Max-Age":           "86400",
-		"Access-Control-Expose-Headers":    "X-Request-Id",
+		"Access-Control-Allow-Origin":   "https://example.com",
+		"Access-Control-Allow-Methods":  "GET, POST",
+		"Access-Control-Allow-Headers":  "Content-Type, Authorization",
+		"Access-Control-Max-Age":        "86400",
+		"Access-Control-Expose-Headers": "X-Request-Id",
 	}, 200)
 
 	result := AuditCORS("https://api.example.com", cfg)
@@ -87,8 +87,8 @@ func TestAuditGoodConfig(t *testing.T) {
 
 func TestAuditOverlyPermissiveMethods(t *testing.T) {
 	cfg := cors.ParseCORSHeadersFromMap(map[string]string{
-		"Access-Control-Allow-Origin":      "https://example.com",
-		"Access-Control-Allow-Methods":     "GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, TRACE, CONNECT, FETCH, PROPFIND",
+		"Access-Control-Allow-Origin":  "https://example.com",
+		"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, TRACE, CONNECT, FETCH, PROPFIND",
 	}, 200)
 
 	result := AuditCORS("https://api.example.com", cfg)
@@ -109,8 +109,8 @@ func TestAuditOverlyPermissiveMethods(t *testing.T) {
 
 func TestAuditWildcardHeaders(t *testing.T) {
 	cfg := cors.ParseCORSHeadersFromMap(map[string]string{
-		"Access-Control-Allow-Origin":      "https://example.com",
-		"Access-Control-Allow-Headers":     "*",
+		"Access-Control-Allow-Origin":  "https://example.com",
+		"Access-Control-Allow-Headers": "*",
 	}, 200)
 
 	result := AuditCORS("https://api.example.com", cfg)
@@ -152,25 +152,25 @@ func TestAuditNoMaxAge(t *testing.T) {
 
 func TestScoreCalculation(t *testing.T) {
 	tests := []struct {
-		name   string
+		name    string
 		headers map[string]string
 		wantMin int
 		wantMax int
 	}{
 		{
-			name:   "perfect config",
+			name: "perfect config",
 			headers: map[string]string{
-				"Access-Control-Allow-Origin":      "https://example.com",
-				"Access-Control-Allow-Methods":     "GET, POST",
-				"Access-Control-Allow-Headers":     "Content-Type",
-				"Access-Control-Max-Age":           "86400",
-				"Access-Control-Expose-Headers":    "X-Request-Id",
+				"Access-Control-Allow-Origin":   "https://example.com",
+				"Access-Control-Allow-Methods":  "GET, POST",
+				"Access-Control-Allow-Headers":  "Content-Type",
+				"Access-Control-Max-Age":        "86400",
+				"Access-Control-Expose-Headers": "X-Request-Id",
 			},
 			wantMin: 80,
 			wantMax: 100,
 		},
 		{
-			name:   "wildcard origin",
+			name: "wildcard origin",
 			headers: map[string]string{
 				"Access-Control-Allow-Origin": "*",
 			},
